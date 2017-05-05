@@ -1,2 +1,2 @@
 # nodejs-site
-Create a Site Width nodje, express, mongod, etc.
+Create a Site Width nodejs, express, mongodb, etc.
