@@ -1,0 +1,8 @@
+COMMON/**/*.js
+/node_modules
+/dist
+.project
+*.php
+*.uini
+*.conf
+Error*
