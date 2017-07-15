@@ -5,23 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var config = require('./config/db')
-var mongoose = require('mongoose');
-mongoose.connect(config.mongodb)
-
 // var session = require('express-session');
 // var seven = require('seven-express');
 
 // var router = express.Router();
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var movie = require('./routes/movie');
+// var index = require('./routes/index');
+// var users = require('./routes/users');
+// var movie = require('./routes/movie');
+
 
 var app = express();
 
-// 链接数据库
-// mongoose.connect('mongodb://localhost:27017/test');
+var mongoose=require('./config/mongoose.js');
+var db=mongoose();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,10 +32,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.all('*', function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+//     res.header("X-Powered-By",' 3.2.1')
+//     res.header("Content-Type", "application/json;charset=utf-8");
+//     next();
+// });
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/api', movie);
+// app.use('/', index);
+// app.use('/users', users);
+// app.use('/api', movie);
+
+require('./routes/movie.js')(app)
+require('./routes/users.js')(app);
 
 app.use('/add/:name', function(req, res, next) {
 	res.send('哈哈哈'+req.params.name+req.query.name)
