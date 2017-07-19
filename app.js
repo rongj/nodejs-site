@@ -1,56 +1,63 @@
 var express = require('express');
 var path = require('path');
+var compression = require('compression');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-// var session = require('express-session');
+var session = require('express-session');
 // var seven = require('seven-express');
-
-// var router = express.Router();
-
-// var index = require('./routes/index');
-// var users = require('./routes/users');
-// var movie = require('./routes/movie');
 
 
 var app = express();
 
-var mongoose=require('./config/mongoose.js');
-var db=mongoose();
+var mongoose = require('./config/mongoose.js');
+var db = mongoose();
 
-// view engine setup
+// Gzip压缩
+app.use(compression());
+
+// 视图目录及模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// 定义静态资源路径
+app.use(express.static(path.join(__dirname, 'public')));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+	secret: '8562',
+	name: 'SESSIONID',
+	cookie: {}, // 默认 cookie.maxAge 为 null, 即不过期
+	resave: false,
+	saveUninitialized: true,
+}))
 
-// app.all('*', function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-//     res.header("X-Powered-By",' 3.2.1')
-//     res.header("Content-Type", "application/json;charset=utf-8");
-//     next();
-// });
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
+});
 
-// app.use('/', index);
+app.use('/', require('./routes/index'));
+app.use('/api', require('./routes/api'));
+
 // app.use('/users', users);
-// app.use('/api', movie);
 
-require('./routes/movie.js')(app)
-require('./routes/users.js')(app);
+// require('./routes/index.js')(app);
+// require('./routes/movie.js')(app)
+// require('./routes/users.js')(app);
 
-app.use('/add/:name', function(req, res, next) {
-	res.send('哈哈哈'+req.params.name+req.query.name)
-})
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

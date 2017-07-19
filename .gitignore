@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 COMMON/**/*.js
 /node_modules
 /dist
@@ -45,4 +44,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
->>>>>>> 0d8042a1596c73ce9da3e3de366c9e71274d662d

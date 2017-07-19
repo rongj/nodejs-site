@@ -3,9 +3,22 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <button>获取数据</button>
+    <script type="text/javascript">
+    $('button').click(function() {
+	    $.ajax({
+	    	url: 'http://127.0.0.1:3000/api/movies',
+	    	method: 'get',
+	    	success: function (data) {
+	    		console.log(data);
+	    	}
+	    })
+    })
+    </script>
   </body>
 </html>
